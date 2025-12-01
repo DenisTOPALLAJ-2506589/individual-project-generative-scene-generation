@@ -124,7 +124,6 @@ ENV PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 ENV CUDA_PATH=/usr/local/cuda-12.8
 ENV TORCH_USE_CUDA_DSA=1
 
-
 # Build LichtFeld-Studio with limited parallel jobs to avoid memory issues
 RUN mkdir -p build && \
 	cd build && \
@@ -133,16 +132,6 @@ RUN mkdir -p build && \
 	-DCMAKE_PREFIX_PATH=/opt/libtorch \
 	-DCMAKE_BUILD_TYPE=Release && \
 	cmake --build . --config Release -j$(nproc)
-
-# Copy backend application
-WORKDIR /app
-COPY backend/ /app/backend/
-COPY frontend/ /app/frontend/
-
-# Install Python dependencies for web API
-RUN apt-get install -y python3-pip
-RUN pip3 install --no-cache-dir --break-system-packages -r backend/requirements.txt
-
 # Create necessary directories
 RUN mkdir -p /data /app/colmap_project
 
@@ -152,5 +141,3 @@ WORKDIR /app
 # Expose port for API
 EXPOSE 8000
 
-# Start the FastAPI server
-CMD ["python3", "-m", "uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
