@@ -44,8 +44,13 @@ docker exec -it lichtfeld-studio bash
 6. Check if the folder `output/<folder_name>` contains a `.ply` file.
 7. Done
 
+### Future Plan
+
+GUI using gradio. The user only has to run one command (install script)
+everything else is done using gradio.
+
 ## Author
 
 - Denis Topallaj
 - Individual Project – Generative Scene Generation
-- University of Hasselt, 2025-2026k
+- University of Hasselt, 2025-2026
