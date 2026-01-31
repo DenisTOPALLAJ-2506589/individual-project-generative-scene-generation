@@ -23,6 +23,9 @@ sudo apt install -y colmap
 # Install bc (basic calculator)
 sudo apt install -y bc
 
+# Install ffmpeg
+sudo apt install -y ffmpeg
+
 echo "[✓] COLMAP installed"
 
 # Verify installation

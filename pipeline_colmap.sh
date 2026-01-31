@@ -57,9 +57,15 @@ fi
 # Check if video file exists
 [ ! -f "$VIDEO_FILE" ] && error "Video file '$VIDEO_FILE' not found!"
 
-# Check dependencies
-command -v ffmpeg >/dev/null 2>&1 || error "ffmpeg is not installed. Install with: sudo apt install ffmpeg"
-command -v colmap >/dev/null 2>&1 || error "colmap is not installed"
+# Check dependencies, install if not present
+command -v ffmpeg >/dev/null 2>&1 || {
+	error "ffmpeg is not installed. Install with: sudo apt install ffmpeg"
+	./install_colmap.sh
+}
+command -v colmap >/dev/null 2>&1 || {
+	error "colmap is not installed"
+	./install_colmap.sh
+}
 
 # Get video information
 log "Analyzing video file..."
@@ -131,12 +137,11 @@ colmap feature_extractor \
 	--database_path "$PROJECT_DIR/database/database.db" \
 	--image_path "$PROJECT_DIR/images" \
 	--ImageReader.single_camera 1 \
-	--ImageReader.camera_model OPENCV \
-	--SiftExtraction.use_gpu 0
+	--ImageReader.camera_model OPENCV
 
 log "Feature extraction complete"
 
-# Feature matching - Can use GPU if available
+# Feature matching
 log "Matching features..."
 if [ "$USE_GPU" -eq 1 ]; then
 	colmap exhaustive_matcher \
@@ -147,8 +152,6 @@ else
 		--database_path "$PROJECT_DIR/database/database.db" \
 		--SiftMatching.use_gpu 0
 fi
-
-log "Feature matching complete"
 
 # Sparse reconstruction
 log "Building sparse reconstruction..."
@@ -189,6 +192,7 @@ colmap image_undistorter \
 	--output_path "$PROJECT_DIR/dense" \
 	--output_type COLMAP
 
+: <<'SKIP_DENSE'
 # Dense reconstruction (optional - can be skipped for Gaussian Splatting)
 read -p "$(echo -e ${YELLOW}Perform dense reconstruction? This can take a long time. [y/N]:${NC})" -n 1 -r
 echo
@@ -222,6 +226,7 @@ else
 	log "Skipping dense reconstruction"
 	DENSE_STATUS="✗ Skipped"
 fi
+SKIP_DENSE
 
 log "================================"
 log "PIPELINE COMPLETE!"
@@ -242,7 +247,7 @@ log "  Registered images: $REGISTERED_IMAGES ($(echo "scale=1; $REGISTERED_IMAGE
 log "  Reconstruction: $([ -f "$PROJECT_DIR/sparse/0/cameras.bin" ] && echo "SUCCESS ✓" || echo "FAILED ✗")"
 log ""
 log "For LichtFeld-Studio / Gaussian Splatting, use:"
-log "  ./build/LichtFeld-Studio -d $PROJECT_DIR/sparse/0 -o output/ --gui"
+log "  ./build/LichtFeld-Studio -d $PROJECT_DIR/ -o output/$PROJECT_DIR/ --gut"
 log ""
 log "Note: Feature extraction used CPU mode to avoid OpenGL issues in Docker."
 log "      This is slower but more reliable in containerized environments."

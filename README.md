@@ -17,7 +17,17 @@ This project, **Generative Scene Generation**, explores how **AI-generated visua
 2. **3D Reconstruction:** Employ **COLMAP** for structure-from-motion (SfM) processing and **3D Gaussian Splatting** for scene representation.
 3. **Comparison and Analysis:** Evaluate how the AI-generated reconstruction differs from real-world 3D data and discuss corrective techniques.
 
-## Plan Of Action (WIP)
+## Pipeline
+
+```markdown
+1. Video Upload
+2. COLMAP Pipeline (./pipeline_colmap.sh)
+3. LichtFeld-Studio GUI (./build/LichtFeld-Studio)
+4. ZIP Creation
+5. Download Results
+```
+
+## Usage
 
 ### Docker
 
@@ -32,9 +42,12 @@ sudo systemctl start docker
 
 # In the docker folder where the docker-compose.yml file is located:
 docker exec -it lichtfeld-studio bash
+
+# Run the gradio server, navigate to http://localhost:7860
+python app.py
 ```
 
-### Using the system
+### Commands only
 
 1. Create a video file and place it in the current folder
 2. Run the file: `./install_colmap.sh` (if colmap isn't installed already)
@@ -43,11 +56,6 @@ docker exec -it lichtfeld-studio bash
 5. In the GUI of LichtFeld-Studio, train the model on the images
 6. Check if the folder `output/<folder_name>` contains a `.ply` file.
 7. Done
-
-### Future Plan
-
-GUI using gradio. The user only has to run one command (install script)
-everything else is done using gradio.
 
 ## Author
 
