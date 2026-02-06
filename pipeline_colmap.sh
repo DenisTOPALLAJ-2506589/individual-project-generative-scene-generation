@@ -57,15 +57,16 @@ fi
 # Check if video file exists
 [ ! -f "$VIDEO_FILE" ] && error "Video file '$VIDEO_FILE' not found!"
 
-# Check dependencies, install if not present
 command -v ffmpeg >/dev/null 2>&1 || {
-	error "ffmpeg is not installed. Install with: sudo apt install ffmpeg"
-	./install_colmap.sh
+    echo "ffmpeg is not installed. Install with: sudo apt install ffmpeg" >&2
+    ./install_colmap.sh
 }
+
 command -v colmap >/dev/null 2>&1 || {
-	error "colmap is not installed"
-	./install_colmap.sh
+    echo "colmap is not installed. Install with: sudo apt install colmap" >&2
+    ./install_colmap.sh
 }
+
 
 # Get video information
 log "Analyzing video file..."
