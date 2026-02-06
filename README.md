@@ -40,11 +40,8 @@ sudo systemctl start docker
 # Create the docker container using docker-compose
 ./docker/run_docker.sh -bu 12.8.0
 
-# In the docker folder where the docker-compose.yml file is located:
-docker exec -it lichtfeld-studio bash
-
 # Run the gradio server, navigate to http://localhost:7860
-python app.py
+python3 app.py
 ```
 
 ### Commands only
