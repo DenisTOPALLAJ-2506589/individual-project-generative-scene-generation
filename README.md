@@ -37,7 +37,7 @@ Run the following commands to start the system
 # Start docker
 sudo systemctl start docker
 
-# Create the docker container using docker-compose
+# Start the building process of the LichtFeld-Studio project
 ./docker/run_docker.sh -bu 12.8.0
 
 # Run the gradio server, navigate to http://localhost:7860
