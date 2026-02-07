@@ -158,21 +158,6 @@ RUN echo '#!/bin/sh' >> ${HOME}/.docker_whale && \
 	echo 'printf "\n${colorwhite}Welcome to LichtFeld-Studio dev container!${colornormal}\n"' >> ${HOME}/.docker_whale && \
 	echo "bash \$HOME/.docker_whale" >> ${HOME}/.bashrc
 
-# Build the project
-COPY --chown=${USERNAME}:${USERNAME} . ${HOME}/projects/LichtFeld-Studio/
-
-# Build the project
-WORKDIR ${HOME}/projects/LichtFeld-Studio/
-
-RUN if [ -f "build.sh" ] && [ ! -d "build" ]; then \
-	echo "build/ does not exist, running build.sh" && \
-	chmod +x build.sh && \
-	./build.sh; \
-	fi
-
-# Add build directory to PATH
-ENV PATH="${HOME}/projects/LichtFeld-Studio/build:${PATH}"
-
 WORKDIR ${HOME}
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

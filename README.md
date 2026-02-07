@@ -29,6 +29,24 @@ This project, **Generative Scene Generation**, explores how **AI-generated visua
 
 ## Usage
 
+In Linux, make sure to run the following commands:
+
+```
+xhost +local:docker
+xhost +local:root
+```
+
+Those commands allow Docker containers to access your host's X11 display server. COLMAP tries to create an OpenGL context, which requires X11 access even in "offscreen" mode. `xhost +local:root` and `xhost +local:docker` grant the necessary permissions for the containerized application to connect to your display server for GPU/OpenGL operations. Without these, Docker can't create the OpenGL context, causing the following crash:
+
+```bash
+opengl_utils.cc:54] Check failed: context_.create()
+*** Check failure stack trace: ***
+    @     0x7f52c1434031  google::LogMessage::Fail()
+./pipeline_colmap.sh: line 141: 276472 Aborted                 (core dumped) colmap feature_extractor --database_path "$PROJECT_DIR/database/database.db" --image_path "$PROJECT_DIR/images" --ImageReader.single_camera 1 --ImageReader.camera_model OPENCV
+
+❌ COLMAP failed with exit code 134
+```
+
 ### Docker
 
 Run the following commands to start the system
@@ -40,7 +58,7 @@ sudo systemctl start docker
 # Start the building process of the LichtFeld-Studio project
 ./docker/run_docker.sh -bu 12.8.0
 
-# Run the gradio server, navigate to http://localhost:7860
+# Run the gradio server (inside the container), navigate to http://localhost:7860
 python3 app.py
 ```
 

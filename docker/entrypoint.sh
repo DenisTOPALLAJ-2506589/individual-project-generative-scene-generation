@@ -1,11 +1,14 @@
 #!/bin/bash
-set -e
+set -e # Exit on error
 
-echo "[ENTRYPOINT] Starting LicthFeld-Studio container..."
+# Check if build directory exists and is complete
+if [ ! -d "${HOME}/projects/LichtFeld-Studio/build" ] || [ ! -f "${HOME}/projects/LichtFeld-Studio/build/LichtFeld-Studio" ]; then
+	echo "Build not found or incomplete, building now..."
+	cd ${HOME}/projects/LichtFeld-Studio
+	./build.sh 2>&1 | tee /tmp/build.log # Show output and save to log
+	echo "Build completed!"
+else
+	echo "Build directory found, skipping build"
+fi
 
-# Define variables
-PROJECT_DIR="/home/${USER}/projects/LichtFeld-Studio"
-
-mkdir -p "${PROJECT_DIR}/external"
-
-exec "${@:-bash}"
+exec "$@"

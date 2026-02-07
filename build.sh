@@ -5,6 +5,12 @@ VCPKG_ROOT="${HOME}/vcpkg"
 PROJECT_DIR="$(pwd)"
 CLEAN=${1:-""}
 
+# If build exists and no clean flag is passed, skip the build
+if [ -d "$PROJECT_DIR/build" ] && [ "$CLEAN" != "clean" ] && [ "$CLEAN" != "--clean" ]; then
+	echo "build directory already exists, skipping build"
+	exit 0
+fi
+
 # Install prerequisites
 sudo apt update
 sudo apt install -y ninja-build nasm autoconf autoconf-archive automake libtool
@@ -22,13 +28,6 @@ export CMAKE_CUDA_COMPILER=/usr/local/cuda/bin/nvcc
 }
 
 export VCPKG_ROOT
-
-# Clone/update project
-[ ! -d "$PROJECT_DIR" ] && git clone --recursive https://github.com/MrNeRF/LichtFeld-Studio.git "$PROJECT_DIR" || {
-	cd "$PROJECT_DIR" && git pull && git submodule update --recursive && cd -
-}
-
-cd "$PROJECT_DIR"
 
 # Clean and build
 [ "$CLEAN" = "clean" ] || [ "$CLEAN" = "--clean" ] && rm -rf build
