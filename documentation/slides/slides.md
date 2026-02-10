@@ -172,23 +172,6 @@ Text → Video → COLMAP → LichtFeld-Studio → 3D Model
 
 ---
 
-# Additional Testing in November
-
-**Attempted Models:**
-
-1. `THUDM/CogVideoX-5b-I2V` (image-to-video)
-
-    - Result: Colab timeout
-
-2. `Facebook I2V model` (HuggingFace)
-
-    - Status: Work in progress
-
-3. `Tencent/hunyuanvideo-1.5`
-    - Result: Needs 200GB+ storage
-
----
-
 # December Activities
 
 - Fixed Dockerfile errors
