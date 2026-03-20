@@ -1,5 +1,6 @@
 services:
     lichtfeld-studio:
+        runtime: nvidia
         container_name: lichtfeld-studio
         build:
             context: ../
