@@ -3,6 +3,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 # windows/linux platform independent
+set(VCPKG_C_FLAGS "-std=c17")
+set(VCPKG_CXX_FLAGS "-std=c++17")
 set(RAW_VCPKG_PATH $ENV{VCPKG_ROOT})
 file(TO_CMAKE_PATH "${RAW_VCPKG_PATH}" VCPKG_ROOT)
 

@@ -88,8 +88,11 @@ RUN set -eux; \
 # Set environment
 ENV USER=${USERNAME}
 ENV HOME=/home/${USERNAME}
-WORKDIR /home/${USERNAME}
 
+ENV CFLAGS="-std=gnu17"
+ENV CXXFLAGS="-std=gnu++17"
+
+WORKDIR /home/${USERNAME}
 USER ${USERNAME}
 
 RUN git clone https://github.com/microsoft/vcpkg.git ${HOME}/vcpkg && \

@@ -36,6 +36,8 @@ xhost +local:docker
 xhost +local:root
 ```
 
+Possible issue when you're working on this: Black LichtFeld-Studio screen, can't exit. Solution: `xhost +local:docker; xhost +SI:localuser:$(whoami)` and inside the container: `unset __NV_PRIME_RENDER_OFFLOAD; unset __GLX_VENDOR_LIBRARY_NAME`. After this you should be able to run: `./build/LichtFeld-Studio`, and thus can run the app using: `python app.py`
+
 Those commands allow Docker containers to access your host's X11 display server. COLMAP tries to create an OpenGL context, which requires X11 access even in "offscreen" mode. `xhost +local:root` and `xhost +local:docker` grant the necessary permissions for the containerized application to connect to your display server for GPU/OpenGL operations. Without these, Docker can't create the OpenGL context, causing the following crash:
 
 ```bash
@@ -46,6 +48,16 @@ opengl_utils.cc:54] Check failed: context_.create()
 
 ❌ COLMAP failed with exit code 134
 ```
+
+Another possible issue:
+
+```bash
+./build/LichtFeld-Studio: /lib/x86_64-linux-gnu/libm.so.6: version GLIBC_2.38' not found (required by ./build/LichtFeld-Studio)
+./build/LichtFeld-Studio: /lib/x86_64-linux-gnu/libc.so.6: version GLIBC_2.36' not found (required by ./build/LichtFeld-Studio)
+./build/LichtFeld-Studio: /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.38' not found (required by ./build/LichtFeld-Studio)
+```
+
+This issue can exist when your system doesn't have the right packages because it might be too old. You're trying to run it on your host system, which has an older GLIBC. Solution: only run the LichtFeld-Studio binary inside the docker container.
 
 ### Docker
 
