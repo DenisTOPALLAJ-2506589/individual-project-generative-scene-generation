@@ -58,15 +58,14 @@ fi
 [ ! -f "$VIDEO_FILE" ] && error "Video file '$VIDEO_FILE' not found!"
 
 command -v ffmpeg >/dev/null 2>&1 || {
-    echo "ffmpeg is not installed. Install with: sudo apt install ffmpeg" >&2
-    ./install_colmap.sh
+	echo "ffmpeg is not installed. Install with: sudo apt install ffmpeg" >&2
+	./install_colmap.sh
 }
 
 command -v colmap >/dev/null 2>&1 || {
-    echo "colmap is not installed. Install with: sudo apt install colmap" >&2
-    ./install_colmap.sh
+	echo "colmap is not installed. Install with: sudo apt install colmap" >&2
+	./install_colmap.sh
 }
-
 
 # Get video information
 log "Analyzing video file..."
@@ -127,32 +126,36 @@ if [ "$FRAME_COUNT" -lt 10 ]; then
 	error "Not enough frames ($FRAME_COUNT). Need at least 10 frames. Try increasing FPS parameter."
 fi
 
-# Feature extraction - FIXED: Use CPU mode to avoid OpenGL issues in Docker
+# Feature extraction
 log "Extracting features using CPU (this may take a while)..."
 warn "Using CPU for feature extraction to avoid GPU/OpenGL issues in Docker"
 
-# Set environment to force CPU mode
 export QT_QPA_PLATFORM=offscreen
 
 colmap feature_extractor \
 	--database_path "$PROJECT_DIR/database/database.db" \
 	--image_path "$PROJECT_DIR/images" \
 	--ImageReader.single_camera 1 \
-	--ImageReader.camera_model OPENCV
+	--ImageReader.camera_model OPENCV \
+	--SiftExtraction.use_gpu 0 # FIX: was missing; forces CPU extraction
 
 log "Feature extraction complete"
 
-# Feature matching
-log "Matching features..."
-if [ "$USE_GPU" -eq 1 ]; then
-	colmap exhaustive_matcher \
-		--database_path "$PROJECT_DIR/database/database.db" \
-		--SiftMatching.use_gpu 1
-else
-	colmap exhaustive_matcher \
-		--database_path "$PROJECT_DIR/database/database.db" \
-		--SiftMatching.use_gpu 0
-fi
+# Sequential matching (replaces exhaustive_matcher)
+# sequential_matcher is O(n·k) instead of O(n²) — correct for video input.
+log "Matching features sequentially..."
+
+GPU_FLAG=0
+[ "$USE_GPU" -eq 1 ] && GPU_FLAG=1
+
+colmap sequential_matcher \
+	--database_path "$PROJECT_DIR/database/database.db" \
+	--SequentialMatching.overlap 15 \
+	--SequentialMatching.quadratic_overlap 1 \
+	--SequentialMatching.loop_detection 0 \
+	--SiftMatching.use_gpu "$GPU_FLAG"
+
+log "Feature matching complete"
 
 # Sparse reconstruction
 log "Building sparse reconstruction..."

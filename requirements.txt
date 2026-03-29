@@ -1,0 +1,8 @@
+scipy
+scikit-image
+opencv-contrib-python
+python-ffmpeg
+scikit-image
+lpips
+torch
+torchvision
