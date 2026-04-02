@@ -2,6 +2,20 @@
 
 ![pipeline](./documentation/pipeline_diagram.png)
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Project Goals](#project-goals)
+- [Methodology](#methodology)
+- [Pipeline](#pipeline)
+- [Usage](#usage)
+    - [Wan2GP](#wan2gp)
+    - [LichtFeld-Studio pipeline](#lichtfeld-studio-pipeline)
+      - [Docker](#docker)
+      - [Commands only](#commands-only)
+- [Sources](#sources)
+- [Author](#author)
+
 ## Overview
 
 This project, **Generative Scene Generation**, explores how **AI-generated visual content** (images and videos) can be used to construct **3D scenes** through the process of **3D Gaussian Splatting**. The work combines insights from computer vision, deep learning, and 3D reconstruction to evaluate the potential of generative models for creating realistic 3D environments from synthetic data.
