@@ -1,8 +1,12 @@
 # Individual Project - Generative Scene Generation
 
+![pipeline](./documentation/pipeline_diagram.png)
+
 ## Overview
 
 This project, **Generative Scene Generation**, explores how **AI-generated visual content** (images and videos) can be used to construct **3D scenes** through the process of **3D Gaussian Splatting**. The work combines insights from computer vision, deep learning, and 3D reconstruction to evaluate the potential of generative models for creating realistic 3D environments from synthetic data.
+
+The videos will be created using the Wan2GP project, and for the conversion between video to 3D Gaussian Splatting, LichtFeld-Studio will be used.
 
 ## Project Goals
 
@@ -59,9 +63,23 @@ Another possible issue:
 
 This issue can exist when your system doesn't have the right packages because it might be too old. You're trying to run it on your host system, which has an older GLIBC. Solution: only run the LichtFeld-Studio binary inside the docker container.
 
-### Docker
+### Wan2GP
 
-Run the following commands to start the system
+The Wan2GP folder contain the source code of the [Wan2GP project](https://github.com/deepbeepmeep/Wan2GP). Install and run it by running the following commands:
+
+```bash
+cd Wan2GP
+pip install -r requirements.txt
+python wgp.py
+```
+
+You should be able to see that the gradio server has started running, and you can visit the page by going to: `localhost:7860`
+
+### LichtFeld-Studio pipeline
+
+#### Docker
+
+Run the following commands to start the LichtFeld-Studio pipeline
 
 ```bash
 # Start docker
@@ -74,7 +92,7 @@ sudo systemctl start docker
 python3 app.py
 ```
 
-### Commands only
+#### Commands only
 
 1. Create a video file and place it in the current folder
 2. Run the file: `./install_colmap.sh` (if colmap isn't installed already)
@@ -83,6 +101,11 @@ python3 app.py
 5. In the GUI of LichtFeld-Studio, train the model on the images
 6. Check if the folder `output/<folder_name>` contains a `.ply` file.
 7. Done
+
+## Sources
+
+- Wan2GP: <https://github.com/deepbeepmeep/Wan2GP>
+- LichtFeld-Studio: <https://github.com/MrNeRF/LichtFeld-Studio>
 
 ## Author
 

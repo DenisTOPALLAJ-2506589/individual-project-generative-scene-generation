@@ -2,3 +2,6 @@ build/
 output/
 .gradio/
 external/
+Wan2GP/tmp/
+Wan2GP/cache/
+Wan2GP/*.log
