@@ -150,7 +150,7 @@ GPU_FLAG=0
 
 colmap sequential_matcher \
 	--database_path "$PROJECT_DIR/database/database.db" \
-	--SequentialMatching.overlap 15 \
+	--SequentialMatching.overlap 25 \
 	--SequentialMatching.quadratic_overlap 1 \
 	--SequentialMatching.loop_detection 0 \
 	--SiftMatching.use_gpu "$GPU_FLAG"
