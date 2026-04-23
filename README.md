@@ -7,12 +7,13 @@
 - [Overview](#overview)
 - [Project Goals](#project-goals)
 - [Methodology](#methodology)
+- [Files Added](#files-added)
 - [Pipeline](#pipeline)
 - [Usage](#usage)
-    - [Wan2GP](#wan2gp)
-    - [LichtFeld-Studio pipeline](#lichtfeld-studio-pipeline)
-      - [Docker](#docker)
-      - [Commands only](#commands-only)
+  - [Wan2GP](#wan2gp)
+  - [LichtFeld-Studio pipeline](#lichtfeld-studio-pipeline)
+    - [Docker](#docker)
+    - [Commands only](#commands-only)
 - [Sources](#sources)
 - [Author](#author)
 
@@ -34,6 +35,22 @@ The videos will be created using the Wan2GP project, and for the conversion betw
 1. **Data Generation:** Use open-source AI models to produce images and videos as input.
 2. **3D Reconstruction:** Employ **COLMAP** for structure-from-motion (SfM) processing and **3D Gaussian Splatting** for scene representation.
 3. **Comparison and Analysis:** Evaluate how the AI-generated reconstruction differs from real-world 3D data and discuss corrective techniques.
+
+## Files Added
+
+This section contains all the files added/changed for this project since there
+are two projects involved, Wan2GP and LichtFeld-Studio.
+
+- [documentation](./documentation): Documentation of the project containing
+  slides for the intermediate presentation, the paper, notes, etc.
+- [validation](./validation): Validation scripts allowing reference based
+  validation of the videos generated in comparison to the ground truth.
+- [pipeline_colmap.sh](./pipeline_colmap.sh): Script to run the COLMAP pipeline
+- [install_colmap.sh](./install_colmap.sh): Script to install COLMAP
+- [app.py](./app.py): Gradio app for the LichtFeld-Studio pipeline. It
+  transforms the video into 3D Gaussian Splatting with the COLMAP pipeline.
+- [build](./build): Folder containing the LichtFeld-Studio binary.
+- Slight modifications to the Docker files in order for it to work on my device
 
 ## Pipeline
 
