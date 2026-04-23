@@ -1,8 +1,27 @@
 # Individual Project - Generative Scene Generation
 
+![pipeline](./documentation/pipeline_diagram.png)
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Project Goals](#project-goals)
+- [Methodology](#methodology)
+- [Files Added](#files-added)
+- [Pipeline](#pipeline)
+- [Usage](#usage)
+  - [Wan2GP](#wan2gp)
+  - [LichtFeld-Studio pipeline](#lichtfeld-studio-pipeline)
+    - [Docker](#docker)
+    - [Commands only](#commands-only)
+- [Sources](#sources)
+- [Author](#author)
+
 ## Overview
 
 This project, **Generative Scene Generation**, explores how **AI-generated visual content** (images and videos) can be used to construct **3D scenes** through the process of **3D Gaussian Splatting**. The work combines insights from computer vision, deep learning, and 3D reconstruction to evaluate the potential of generative models for creating realistic 3D environments from synthetic data.
+
+The videos will be created using the Wan2GP project, and for the conversion between video to 3D Gaussian Splatting, LichtFeld-Studio will be used.
 
 ## Project Goals
 
@@ -16,6 +35,22 @@ This project, **Generative Scene Generation**, explores how **AI-generated visua
 1. **Data Generation:** Use open-source AI models to produce images and videos as input.
 2. **3D Reconstruction:** Employ **COLMAP** for structure-from-motion (SfM) processing and **3D Gaussian Splatting** for scene representation.
 3. **Comparison and Analysis:** Evaluate how the AI-generated reconstruction differs from real-world 3D data and discuss corrective techniques.
+
+## Files Added
+
+This section contains all the files added/changed for this project since there
+are two projects involved, Wan2GP and LichtFeld-Studio.
+
+- [documentation](./documentation): Documentation of the project containing
+  slides for the intermediate presentation, the paper, notes, etc.
+- [validation](./validation): Validation scripts allowing reference based
+  validation of the videos generated in comparison to the ground truth.
+- [pipeline_colmap.sh](./pipeline_colmap.sh): Script to run the COLMAP pipeline
+- [install_colmap.sh](./install_colmap.sh): Script to install COLMAP
+- [app.py](./app.py): Gradio app for the LichtFeld-Studio pipeline. It
+  transforms the video into 3D Gaussian Splatting with the COLMAP pipeline.
+- [build](./build): Folder containing the LichtFeld-Studio binary.
+- Slight modifications to the Docker files in order for it to work on my device
 
 ## Pipeline
 
@@ -36,6 +71,8 @@ xhost +local:docker
 xhost +local:root
 ```
 
+Possible issue when you're working on this: Black LichtFeld-Studio screen, can't exit. Solution: `xhost +local:docker; xhost +SI:localuser:$(whoami)` and inside the container: `unset __NV_PRIME_RENDER_OFFLOAD; unset __GLX_VENDOR_LIBRARY_NAME`. After this you should be able to run: `./build/LichtFeld-Studio`, and thus can run the app using: `python app.py`
+
 Those commands allow Docker containers to access your host's X11 display server. COLMAP tries to create an OpenGL context, which requires X11 access even in "offscreen" mode. `xhost +local:root` and `xhost +local:docker` grant the necessary permissions for the containerized application to connect to your display server for GPU/OpenGL operations. Without these, Docker can't create the OpenGL context, causing the following crash:
 
 ```bash
@@ -47,9 +84,33 @@ opengl_utils.cc:54] Check failed: context_.create()
 ❌ COLMAP failed with exit code 134
 ```
 
-### Docker
+Another possible issue:
 
-Run the following commands to start the system
+```bash
+./build/LichtFeld-Studio: /lib/x86_64-linux-gnu/libm.so.6: version GLIBC_2.38' not found (required by ./build/LichtFeld-Studio)
+./build/LichtFeld-Studio: /lib/x86_64-linux-gnu/libc.so.6: version GLIBC_2.36' not found (required by ./build/LichtFeld-Studio)
+./build/LichtFeld-Studio: /lib/x86_64-linux-gnu/libc.so.6: version `GLIBC_2.38' not found (required by ./build/LichtFeld-Studio)
+```
+
+This issue can exist when your system doesn't have the right packages because it might be too old. You're trying to run it on your host system, which has an older GLIBC. Solution: only run the LichtFeld-Studio binary inside the docker container.
+
+### Wan2GP
+
+The Wan2GP folder contain the source code of the [Wan2GP project](https://github.com/deepbeepmeep/Wan2GP). Install and run it by running the following commands:
+
+```bash
+cd Wan2GP
+pip install -r requirements.txt
+python wgp.py
+```
+
+You should be able to see that the gradio server has started running, and you can visit the page by going to: `localhost:7860`
+
+### LichtFeld-Studio pipeline
+
+#### Docker
+
+Run the following commands to start the LichtFeld-Studio pipeline
 
 ```bash
 # Start docker
@@ -62,7 +123,7 @@ sudo systemctl start docker
 python3 app.py
 ```
 
-### Commands only
+#### Commands only
 
 1. Create a video file and place it in the current folder
 2. Run the file: `./install_colmap.sh` (if colmap isn't installed already)
@@ -71,6 +132,11 @@ python3 app.py
 5. In the GUI of LichtFeld-Studio, train the model on the images
 6. Check if the folder `output/<folder_name>` contains a `.ply` file.
 7. Done
+
+## Sources
+
+- Wan2GP: <https://github.com/deepbeepmeep/Wan2GP>
+- LichtFeld-Studio: <https://github.com/MrNeRF/LichtFeld-Studio>
 
 ## Author
 
