@@ -136,7 +136,7 @@ colmap feature_extractor \
 	--database_path "$PROJECT_DIR/database/database.db" \
 	--image_path "$PROJECT_DIR/images" \
 	--ImageReader.single_camera 1 \
-	--ImageReader.camera_model OPENCV \
+	--ImageReader.camera_model PINHOLE \
 	--SiftExtraction.use_gpu 0 # FIX: was missing; forces CPU extraction
 
 log "Feature extraction complete"
