@@ -55,18 +55,27 @@ are two projects involved, Wan2GP and LichtFeld-Studio.
 ## Pipeline
 
 ```markdown
-1. Video Upload
-2. COLMAP Pipeline (./pipeline_colmap.sh)
-3. LichtFeld-Studio GUI (./build/LichtFeld-Studio)
-4. ZIP Creation
-5. Download Results
+1. Make a video (real life or generate it using AI)
+2. Take the most appropriate frames from the video making sure there is around 3 seconds between each frame
+3. Inside the Wan2GP portion of the pipeline
+   a. Choose an image (+prompt) to video model. LTX-Video was used in this project.
+   b. Place the frames in the order mentioned in this image: [Wan2GP-frame-interpolation](./documentation/Wan2GP-frame-interpolation.png)
+   c. Generate the videos
+   d. Combine the videos using FFmpeg into one single video (using the correct order)
+4. Run the Gradio application (./app.py)
+5. Insert the video into the input field, provide a fitting name for the project folders to be created, and pick a fps COLMAP will use to slice your video
+6. COLMAP Pipeline (./pipeline_colmap.sh)
+7. LichtFeld-Studio GUI (./build/LichtFeld-Studio)
+8. Train the 3D Gaussian Splatting environment
+9. ZIP Creation
+10. Download Results
 ```
 
 ## Usage
 
 In Linux, make sure to run the following commands:
 
-```
+```bash
 xhost +local:docker
 xhost +local:root
 ```
