@@ -16,8 +16,8 @@ NC='\033[0m' # No Color
 # Configuration with better defaults
 VIDEO_FILE="${1:-output.mp4}"
 PROJECT_DIR="${2:-colmap_project}"
-FPS="${3:-30}"         # Extract 30 frames per second by default
-MAX_FRAMES="${4:-300}" # Maximum number of frames to extract (prevents too many frames)
+FPS="${3:-30}"          # Extract 30 frames per second by default
+MAX_FRAMES="${4:-1000}" # Maximum number of frames to extract (prevents too many frames)
 
 # Print functions
 log() {
@@ -45,7 +45,7 @@ if [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
 	echo "  VIDEO_FILE   - Input video file (default: output.mp4)"
 	echo "  PROJECT_DIR  - Output directory (default: colmap_project)"
 	echo "  FPS         - Frames per second to extract (default: 30)"
-	echo "  MAX_FRAMES  - Maximum frames to extract (default: 300)"
+	echo "  MAX_FRAMES  - Maximum frames to extract (default: 1000)"
 	echo ""
 	echo "Examples:"
 	echo "  $0 myvideo.mp4                    # Use defaults"
